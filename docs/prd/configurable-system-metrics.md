@@ -9,6 +9,7 @@ touches:
   - "tests/**"
   - "config/**"
   - "README.md"
+  - "README_de.md"
   - ".gitignore"
 ---
 
