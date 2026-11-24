@@ -14,9 +14,7 @@ component = "sys-metrics"
 source = "target/wasm32-wasip2/release/wasm_sys_metrics.wasm"
 allowed_outbound_hosts = []
 files = [
-    { source = "config/metrics.ini", destination = "/config.ini" },
-    { source = "/proc", destination = "/proc" },
-    { source = "/sys", destination = "/sys" }
+    { source = "config/metrics.ini", destination = "/config.ini" }
 ]
 
 [component.sys-metrics.build]

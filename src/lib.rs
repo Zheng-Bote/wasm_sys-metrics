@@ -153,9 +153,21 @@ fn handle_spin_http(req: spin_sdk::http::Request) -> anyhow::Result<spin_sdk::ht
     let method_str = format!("{}", req.method());
 
     let uri_str = req.uri();
-    let (path, query) = match uri_str.split_once('?') {
+    let path_part = if let Some(rest) = uri_str
+        .strip_prefix("http://")
+        .or_else(|| uri_str.strip_prefix("https://"))
+    {
+        match rest.find('/') {
+            Some(idx) => &rest[idx..],
+            None => "/",
+        }
+    } else {
+        uri_str
+    };
+
+    let (path, query) = match path_part.split_once('?') {
         Some((p, q)) => (p, Some(q)),
-        None => (uri_str, None),
+        None => (path_part, None),
     };
 
     let accept = req
