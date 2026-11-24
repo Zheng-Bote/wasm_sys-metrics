@@ -71,8 +71,9 @@ Das kompilierte WebAssembly-Modul liegt unter `target/wasm32-wasip2/release/wasm
 
 ### Start mit Fermyon Spin
 ```bash
-spin up
+spin up --direct-mounts
 ```
+> **Hinweis zur Sandbox:** WebAssembly-Komponenten laufen in einer strikt isolierten WASI-Umgebung. Mit dem Flag `--direct-mounts` und dem im Projekt hinterlegten `host_proc`-Symlink (`host_proc -> /proc`) bindet Spin das Pseudo-Dateisystem des Linux-Hosts live ein, sodass echte Kernel-Statistiken erfasst werden. Ohne Mount greift die Graceful-Degradation mit Nullwerten.
 
 ## Lizenz
 

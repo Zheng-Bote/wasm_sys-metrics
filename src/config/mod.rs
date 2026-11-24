@@ -137,6 +137,7 @@ impl MetricsConfig {
 
         // Try standard fallback paths
         let standard_paths = [
+            Path::new("/config/metrics.ini"),
             Path::new("/config.ini"),
             Path::new("config/metrics.ini"),
             Path::new("metrics.ini"),

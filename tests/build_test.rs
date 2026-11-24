@@ -14,5 +14,6 @@ fn test_ac6_wasm_target_and_spin_manifest() {
     assert!(content.contains("spin_manifest_version = 2"));
     assert!(content.contains("[[trigger.http]]"));
     assert!(content.contains("wasm32-wasip2"));
-    assert!(content.contains("/config.ini") || content.contains("metrics.ini"));
+    assert!(content.contains("config") && content.contains("/config"));
+    assert!(content.contains("host_proc") || content.contains("/proc"));
 }
