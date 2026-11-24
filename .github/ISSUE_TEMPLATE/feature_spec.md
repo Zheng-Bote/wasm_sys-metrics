@@ -1,6 +1,6 @@
 ---
 name: Feature Specification (Spec Kit)
-about: Propose a new feature or rule for md-indexer, md-ai, md-api, md-search or the desktop app.
+about: Propose a new feature, metric collector, or configuration capability for wasm_sys-metrics.
 title: "Feature: "
 labels: "feature, spec-kit"
 assignees: ""
@@ -22,13 +22,11 @@ _Use EARS patterns: `THE SYSTEM SHALL …` (ubiquitous), `WHEN <trigger>, THE SY
 
 _Which layers and files are affected? Delete the lines that do not apply._
 
-- **FS / Watcher:** `internal/watcher/`
-- **Parser & Extractor:** `internal/parser/`, `internal/service/`
-- **Repository (SQLite / FTS5 / embeddings):** `internal/repository/`, `internal/embedding/`
-- **Search / Graph Engine:** `internal/search/`, `internal/graph/`
-- **AI (md-ai):** `internal/ai/` (`hybrid`, `assistant`, `provider`, `contextbuilder`, …)
-- **API / CLI:** `internal/api/`, `cmd/indexer`, `cmd/md-api`, `cmd/md-search`, `cmd/md-ai`
-- **Client app:** `apps/desktop/` (Angular frontend, Tauri `src-tauri`)
+- **Configuration & Parsing (INI):** `src/config/`, `config/`
+- **Metric Collectors:** `src/collectors/` (`cpu`, `memory`, `disk`, `loadavg`, `network`)
+- **Formatters / Exporters:** `src/formatters/` (`prometheus`, `json`)
+- **WASM / Spin HTTP Adapter:** `src/lib.rs`, `spin.toml`
+- **Tests / Fixtures:** `tests/`
 
 ### Open Decisions
 
@@ -36,20 +34,19 @@ _Questions that must be answered before or during implementation (delete if none
 
 ## SpecDD Architecture Alignment (Drift Control)
 
-Please confirm that this feature respects the constraints defined in `md-indexer.sdd`:
+Please confirm that this feature respects the constraints defined in `constitution.md` and `sdd.config.yaml`:
 
-- [ ] **Architecture:** The layered architecture is maintained (Watcher -> Parser -> Repository -> Search/Graph Engine -> API/CLI; API handlers do not access the database directly).
-- [ ] **Architecture:** Client apps under `apps/` use `md-api` over HTTP only and do not access the SQLite database or vault Markdown files directly.
-- [ ] **Architecture:** Feature affects architecture: SpecKit feature forces update of `md-indexer.sdd`.
-- [ ] **Read-Only Vault:** Markdown files remain the immutable single source of truth (no writes, no bidirectional sync).
-- [ ] **Security:** Secret redaction in `contextbuilder` remains enforced; no secrets (API keys, tokens) in logs, CLI arguments or API responses.
-- [ ] **Data Model:** SQLite remains a disposable, backwards-compatible index (`modernc.org/sqlite`, no CGO); existing embeddings survive re-indexing.
-- [ ] **Go Standards:** Standard project layout (`cmd/`, `internal/`), Clean Architecture with Dependency Injection, no global state.
-- [ ] **Standards:** SPDX headers (`Apache-2.0`) and English source documentation will be maintained.
+- [ ] **Architecture:** The layered architecture is maintained (Config -> Collectors -> Formatters -> Spin HTTP Adapter).
+- [ ] **WASM / Spin Compliance:** Components build against target `wasm32-wasip2` and remain compatible with Spin runtime.
+- [ ] **Robustness:** Zero panics on unexpected host/pseudo-filesystem inputs (`/proc` reads, missing files, or invalid INI options return graceful errors or fallbacks).
+- [ ] **Security:** Read-only access only; no secret leakage in endpoints (`/metrics`, `/config`, `/health`).
+- [ ] **Rust Standards:** Adherence to idiomatic Rust, `cargo clippy -- -D warnings`, `cargo test`, and `cargo fmt`.
+- [ ] **Standards:** SPDX headers (`Apache-2.0`) and English source documentation are maintained.
 
 ## Acceptance Criteria
 
 - [ ] Criterion 1
 - [ ] Criterion 2
-- [ ] Tests added/updated: `go test ./...` and, if the desktop app is affected, `npm test` / `cargo test` in `apps/desktop`.
-- [ ] CHANGELOG.md and README.md are up-to-date
+- [ ] Tests added/updated: `cargo test` and `cargo check --target wasm32-wasip2` pass cleanly.
+- [ ] SDD checks pass: `sdd lint` and `sdd gate pre-merge`.
+- [ ] CHANGELOG.md and README.md are up-to-date.
