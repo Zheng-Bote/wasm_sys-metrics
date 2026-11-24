@@ -11,6 +11,8 @@ touches:
   - "README.md"
   - "README_de.md"
   - ".gitignore"
+  - "CHANGELOG.md"
+  - "NOTICE"
 ---
 
 # Tech Spec — Konfigurierbare System-Metriken per Abruf (`configurable-system-metrics`)
