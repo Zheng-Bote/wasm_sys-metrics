@@ -8,6 +8,8 @@ touches:
   - "src/**"
   - "tests/**"
   - "config/**"
+  - "README.md"
+  - ".gitignore"
 ---
 
 # Tech Spec — Konfigurierbare System-Metriken per Abruf (`configurable-system-metrics`)
