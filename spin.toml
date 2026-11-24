@@ -1,0 +1,24 @@
+spin_manifest_version = 2
+
+[application]
+name = "wasm_sys-metrics"
+version = "0.1.0"
+authors = ["Zheng-Bote <zheng.bote@googlemail.com>"]
+description = "Configurable system metrics exporter in Rust for WebAssembly / Spin"
+
+[[trigger.http]]
+route = "/..."
+component = "sys-metrics"
+
+[component.sys-metrics]
+source = "target/wasm32-wasip2/release/wasm_sys_metrics.wasm"
+allowed_outbound_hosts = []
+files = [
+    { source = "config/metrics.ini", destination = "/config.ini" },
+    { source = "/proc", destination = "/proc" },
+    { source = "/sys", destination = "/sys" }
+]
+
+[component.sys-metrics.build]
+command = "cargo build --target wasm32-wasip2 --release --features spin"
+watch = ["src/**/*.rs", "Cargo.toml", "config/*"]
