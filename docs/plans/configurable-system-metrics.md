@@ -16,3 +16,4 @@ Reihenfolge der Umsetzung. Jede Task nennt das Akzeptanzkriterium, auf das sie e
 - [x] AC-4: Spin HTTP Handler mit Routen-Dispatching für `/metrics`, `/metrics/json`, `/health` und `/config` implementieren
 - [x] AC-5: Fehlertolerante Fallback-Strategie und saubere Fehlerbehandlung für Umgebungen ohne `/proc` Filesystem absichern
 - [x] AC-6: `spin.toml` konfigurieren, Integrationstests erstellen und WASM-Kompilierung für `wasm32-wasip2` validieren
+- [x] AC-7: Disk-Kapazitätsdaten (SIZE, USED, AVAIL) in Models, Collector und Formatierer integrieren

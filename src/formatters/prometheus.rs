@@ -88,6 +88,42 @@ pub fn format_prometheus(snapshot: &SystemMetricsSnapshot) -> String {
             let dev = &d.device;
             let _ = writeln!(out, r#"{p}disk_writes_completed_total{{device="{dev}",host="{h}"}} {}"#, d.writes_completed);
         }
+
+        let has_size = snapshot.disk.iter().any(|d| d.size_bytes.is_some());
+        if has_size {
+            let _ = writeln!(out, "# HELP {p}disk_size_bytes Total disk size in bytes");
+            let _ = writeln!(out, "# TYPE {p}disk_size_bytes gauge");
+            for d in &snapshot.disk {
+                if let Some(s) = d.size_bytes {
+                    let dev = &d.device;
+                    let _ = writeln!(out, r#"{p}disk_size_bytes{{device="{dev}",host="{h}"}} {s}"#);
+                }
+            }
+        }
+
+        let has_used = snapshot.disk.iter().any(|d| d.used_bytes.is_some());
+        if has_used {
+            let _ = writeln!(out, "# HELP {p}disk_used_bytes Used disk space in bytes");
+            let _ = writeln!(out, "# TYPE {p}disk_used_bytes gauge");
+            for d in &snapshot.disk {
+                if let Some(u) = d.used_bytes {
+                    let dev = &d.device;
+                    let _ = writeln!(out, r#"{p}disk_used_bytes{{device="{dev}",host="{h}"}} {u}"#);
+                }
+            }
+        }
+
+        let has_avail = snapshot.disk.iter().any(|d| d.available_bytes.is_some());
+        if has_avail {
+            let _ = writeln!(out, "# HELP {p}disk_available_bytes Available disk space in bytes");
+            let _ = writeln!(out, "# TYPE {p}disk_available_bytes gauge");
+            for d in &snapshot.disk {
+                if let Some(a) = d.available_bytes {
+                    let dev = &d.device;
+                    let _ = writeln!(out, r#"{p}disk_available_bytes{{device="{dev}",host="{h}"}} {a}"#);
+                }
+            }
+        }
     }
 
     // Network

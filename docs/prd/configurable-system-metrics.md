@@ -57,3 +57,4 @@ Ein performanter, sicherer Rust-basierter WebAssembly/Spin Microservice, der Sys
 - **AC-4**: Der Spin HTTP Handler stellt die Endpunkte `GET /metrics`, `GET /metrics/json`, `GET /health` und `GET /config` mit korrekten HTTP-Statuscodes und Content-Type-Headern bereit.
 - **AC-5**: Wenn Pseudodateien nicht lesbar oder in der Sandbox nicht eingehängt sind, verarbeitet das System I/O-Fehler fehlertolerant und liefert Fallback-Metriken oder Statusinformationen, ohne abzustürzen oder einen unkontrollierten 500-Fehler zu werfen.
 - **AC-6**: Das Projekt kompiliert fehlerfrei gegen das Rust-WASI-Target `wasm32-wasip2`, verfügt über eine gültige `spin.toml` und besteht alle Unit- und Integrationstests.
+- **AC-7**: Das Disk-Metrikmodul erfasst neben I/O-Operationen auch Kapazitätswerte (SIZE, USED, AVAIL in Bytes) aus `/proc/partitions` und optionalen Dateisystem-Konfigurationen und gibt diese in JSON und Prometheus aus.

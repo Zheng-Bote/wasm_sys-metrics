@@ -115,11 +115,18 @@ pub fn collect_snapshot(config: &MetricsConfig, proc_root: &Path) -> SystemMetri
         }
     }
 
-    // 5. Disk Stats (/proc/diskstats)
+    // 5. Disk Stats (/proc/diskstats and /proc/partitions)
     if config.disk.enabled {
+        let partitions_path = proc_root.join("partitions");
+        let partitions_map = if let Ok(part_content) = fs::read_to_string(&partitions_path) {
+            Some(disk::parse_partitions(&part_content))
+        } else {
+            None
+        };
+
         let diskstats_path = proc_root.join("diskstats");
         if let Ok(content) = fs::read_to_string(&diskstats_path) {
-            snapshot.disk = disk::parse_diskstats(&content, &config.disk.mounts);
+            snapshot.disk = disk::parse_diskstats(&content, &config.disk.mounts, partitions_map.as_ref());
         }
         // Fallback default disk entry if empty
         if snapshot.disk.is_empty() {
@@ -130,6 +137,9 @@ pub fn collect_snapshot(config: &MetricsConfig, proc_root: &Path) -> SystemMetri
                 writes_completed: 0,
                 sectors_written: 0,
                 io_in_progress: 0,
+                size_bytes: None,
+                used_bytes: None,
+                available_bytes: None,
             }];
         }
     }

@@ -121,6 +121,7 @@ pub struct SystemMetricsSnapshot {
 | AC-4 | `src/lib.rs`: Spin HTTP Request Routing (`/metrics`, `/health`, etc.) | `tests/http_handler_test.rs::test_ac4_http_routes_and_negotiation` |
 | AC-5 | `src/collectors/mod.rs` & `src/lib.rs`: Graceful Degradation & Safe Fallback | `tests/collectors_test.rs::test_ac5_graceful_fallback_without_proc` |
 | AC-6 | `spin.toml`, `Cargo.toml`, Target `wasm32-wasip2` | `tests/build_test.rs::test_ac6_wasm_target_and_spin_manifest` |
+| AC-7 | `src/collectors/disk.rs`: Partitions- & Kapazitätsextraktion (SIZE, USED, AVAIL) | `tests/collectors_test.rs::test_ac7_disk_capacity_size_used_avail` |
 
 ## Sicherheit
 

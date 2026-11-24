@@ -68,6 +68,9 @@ fn test_ac3_formatters_output() {
             writes_completed: 8000,
             sectors_written: 400000,
             io_in_progress: 1,
+            size_bytes: Some(1000204886016),
+            used_bytes: Some(500000000000),
+            available_bytes: Some(500204886016),
         }],
         network: vec![NetworkMetrics {
             interface: "eth0".to_string(),
@@ -91,6 +94,9 @@ fn test_ac3_formatters_output() {
     assert!(prom.contains("sys_load1{host=\"cluster-worker-01\"} 0.12"));
     assert!(prom.contains("sys_uptime_seconds{host=\"cluster-worker-01\"} 7200.5"));
     assert!(prom.contains("sys_disk_reads_completed_total{device=\"nvme0n1\",host=\"cluster-worker-01\"} 5000"));
+    assert!(prom.contains("sys_disk_size_bytes{device=\"nvme0n1\",host=\"cluster-worker-01\"} 1000204886016"));
+    assert!(prom.contains("sys_disk_used_bytes{device=\"nvme0n1\",host=\"cluster-worker-01\"} 500000000000"));
+    assert!(prom.contains("sys_disk_available_bytes{device=\"nvme0n1\",host=\"cluster-worker-01\"} 500204886016"));
     assert!(prom.contains("sys_network_receive_bytes_total{host=\"cluster-worker-01\",interface=\"eth0\"} 5242880"));
 
     // Test JSON format

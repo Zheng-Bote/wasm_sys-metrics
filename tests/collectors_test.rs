@@ -117,3 +117,34 @@ fn test_ac5_graceful_fallback_without_proc() {
     assert!(!snapshot.disk.is_empty());
     assert!(!snapshot.network.is_empty());
 }
+
+// configurable-system-metrics AC-7: Disk capacity values (SIZE, USED, AVAIL in bytes) from partitions and configs
+#[test]
+fn test_ac7_disk_capacity_size_used_avail() {
+    let temp_dir = std::env::temp_dir().join("wasm_sys_metrics_test_ac7");
+    let _ = fs::remove_dir_all(&temp_dir);
+    fs::create_dir_all(&temp_dir).unwrap();
+
+    fs::write(
+        temp_dir.join("diskstats"),
+        "   8       0 sda 100 50 8000 50 200 10 1600 100 0 60 150\n",
+    )
+    .unwrap();
+
+    fs::write(
+        temp_dir.join("partitions"),
+        "major minor  #blocks  name\n\
+           8     0  976762584 sda\n",
+    )
+    .unwrap();
+
+    let mut cfg = MetricsConfig::default();
+    cfg.disk.mounts = vec!["sda".to_string()];
+
+    let snapshot = collect_snapshot(&cfg, &temp_dir);
+    assert_eq!(snapshot.disk.len(), 1);
+    assert_eq!(snapshot.disk[0].device, "sda");
+    assert_eq!(snapshot.disk[0].size_bytes, Some(976762584 * 1024));
+
+    let _ = fs::remove_dir_all(&temp_dir);
+}
